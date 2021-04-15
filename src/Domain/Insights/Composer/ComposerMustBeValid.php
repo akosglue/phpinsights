@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace NunoMaduro\PhpInsights\Domain\Insights\Composer;
 
+use Composer\Composer;
 use Composer\IO\NullIO;
-use Composer\Util\ConfigValidator;
 use Composer\Package\Loader\ValidatingArrayLoader;
+use Composer\Util\ConfigValidator;
 use NunoMaduro\PhpInsights\Domain\ComposerFinder;
 use NunoMaduro\PhpInsights\Domain\Contracts\HasDetails;
 use NunoMaduro\PhpInsights\Domain\Details;
@@ -58,5 +59,10 @@ final class ComposerMustBeValid extends Insight implements HasDetails
         }
 
         $this->analyzed = true;
+    }
+
+    private function isComposerV2(): bool
+    {
+        return str_starts_with(Composer::getVersion(), '2');
     }
 }
