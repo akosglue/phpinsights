@@ -1,0 +1,6 @@
+{
+    "require": {
+        "symfony/var-dumper": "^4.3"
+    },
+    "version": "7.6.0"
+}
