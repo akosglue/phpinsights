@@ -6,6 +6,7 @@ namespace NunoMaduro\PhpInsights\Domain\Insights\Composer;
 
 use Composer\IO\NullIO;
 use Composer\Util\ConfigValidator;
+use Composer\Package\Loader\ValidatingArrayLoader;
 use NunoMaduro\PhpInsights\Domain\ComposerFinder;
 use NunoMaduro\PhpInsights\Domain\Contracts\HasDetails;
 use NunoMaduro\PhpInsights\Domain\Details;
@@ -46,7 +47,7 @@ final class ComposerMustBeValid extends Insight implements HasDetails
     {
         $validator = new ConfigValidator(new NullIO());
 
-        [$errors, $publishErrors, $warnings] = $validator->validate(ComposerFinder::getPath($this->collector));
+        [$errors, $publishErrors, $warnings] = $validator->validate(ComposerFinder::getPath($this->collector), ValidatingArrayLoader::CHECK_ALL, $this->config['composerVersionCheck'] ?? ConfigValidator::CHECK_VERSION);
 
         foreach (array_merge($errors, $publishErrors, $warnings) as $issue) {
             if (strpos($issue, ' : ') !== false) {
