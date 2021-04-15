@@ -60,4 +60,24 @@ final class ComposerMustBeValidTest extends TestCase
 
         self::assertContains('The version field is present, it is recommended to leave it out if the package is published on Packagist.', $messages);
     }
+
+    public function testComposerWithVersionIsValidWithDisabledCheck(): void
+    {
+        $path = __DIR__ . '/Fixtures/WithVersion';
+        $collector = new Collector([$path], PathShortener::extractCommonPath([$path]));
+        $insight = new ComposerMustBeValid($collector, ['composerVersionCheck' => false]);
+
+        self::assertTrue($insight->hasIssue());
+        self::assertIsArray($insight->getDetails());
+
+        $messages = [];
+        /** @var Details $detail */
+        foreach ($insight->getDetails() as $detail) {
+            self::assertEquals('composer.json', $detail->getFile());
+            $messages[] = $detail->getMessage();
+        }
+
+        self::assertNotContains('The version field is present, it is recommended to leave it out if the package is published on Packagist.',
+            $messages);
+    }
 }
